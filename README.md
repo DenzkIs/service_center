@@ -1,3 +1,3 @@
 # OOP training project "Repair shop" (service center)
 
-Added Level 1
+Waiting for level 1 confirmation
