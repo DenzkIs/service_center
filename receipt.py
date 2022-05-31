@@ -2,91 +2,32 @@ from datetime import datetime, timedelta
 import locale
 import random
 
-locale.setlocale(locale.LC_ALL, 'ru_RU')  # для отображения месяца на русском
-
-# словарь, который хранит в себе все квитанции
-dict_orders = {
-    958: {
-        'Дата заказа': '09:45:24, 20 Апрель 2022 г.',
-        'ФИО': 'Иванов Иван Иванович',
-        'Статус заказа': 'Выдано клиенту',
-        'Дата выполнения ремонта': '21 Апреля 2022 г.',
-        'Тип устройства': 'Phone',
-        'Модель': 'IPhone',
-        'Операционная система': 'IOS',
-        'Неисправность': 'Разбит экран'
-    },
-    967: {
-        'Дата заказа': '10:33:10, 21 Апрель 2022 г.',
-        'ФИО': 'Петров Петр Петрович',
-        'Статус заказа': 'Выдано клиенту',
-        'Дата выполнения ремонта': '22 Апреля 2022 г.',
-        'Тип устройства': 'Notebook',
-        'Модель': 'HP',
-        'Операционная система': 'Windows 10',
-        'Неисправность': '"Зависает"'
-    },
-    974: {
-        'Дата заказа': '11:15:55 25 Апрель 2022 г.',
-        'ФИО': 'Сидорова Екатерина Сергеевна',
-        'Статус заказа': 'Выдано клиенту',
-        'Дата выполнения ремонта': '30 Апреля 2022 г.',
-        'Тип устройства': 'TV',
-        'Модель': 'LG',
-        'Операционная система': 'WebOS',
-        'Неисправность': 'Не включается'
-    },
-    986: {
-        'Дата заказа': '11:36:22 11 Май 2022 г.',
-        'ФИО': 'Иванов Иван Иванович',
-        'Статус заказа': 'Готово',
-        'Дата выполнения ремонта': '14 Май 2022 г.',
-        'Тип устройства': 'Notebook',
-        'Модель': 'Acer',
-        'Операционная система': 'Windows 7',
-        'Неисправность': 'Перегрев'
-    },
-    999: {
-        'Дата заказа': '15:40:54 15 Май 2022 г.',
-        'ФИО': 'Петров Петр Петрович',
-        'Статус заказа': 'Готово',
-        'Дата выполнения ремонта': '19 Май 2022 г.',
-        'Тип устройства': 'TV',
-        'Модель': 'Samsung',
-        'Операционная система': 'Tizen',
-        'Неисправность': 'Не подключается к Wi-Fi'
-    },
-}
+locale.setlocale(locale.LC_ALL, 'ru_RU')
 
 
 class Order:
-    numb_receipt = 1000  # номера квитанций инициализарую начиная с 1000
+    numb_receipt = 100
 
-    def __init__(self, fio, type: dict):
-        Order.numb_receipt += 1  # каждому новому объекту присваиваю новый номер, увеличив на 1
-        self.type = type  # хранит инфу о принимаемой в ремонт технике
-        self.order_date = datetime.now()  # время создания квитанции
-        self.repair_date = self.order_date + timedelta(days=random.randint(1, 6))  # дата выполнения ремонта
+    def __init__(self, fio, device):
+        Order.numb_receipt += 1
+        self.numb_receipt = Order.numb_receipt
+        self.device = device
+        self.order_date = datetime.now()
+        self.repair_date = self.order_date + timedelta(days=random.randint(1, 6))
         self.fio = fio
-        self.status = 'Ремонтируется'  # статус ремонта
-        dict_orders.update(self.collect_info())  # добавляю в словарь квитанций инфу о новому заказе
-        dict_orders[self.numb_receipt] = dict_orders[self.numb_receipt] | self.type  # добавляю инфу об устройстве
+        self.status = 'Ремонтируется'
 
-    def collect_info(self) -> dict:  # возвращает словарь с информацией о заказе
-        return {
-            self.numb_receipt: {
-                'Дата заказа': self.order_date.strftime('%H:%M:%S, %d %B %Y г.'),
-                'ФИО': self.fio,
-                'Статус заказа': self.status,
-                'Дата выполнения ремонта': self.repair_date.strftime('%d %B %Y г.')
-            }
+    def __str__(self):
+        return f'{self.numb_receipt, self.order_date, self.fio, self.device, self.status, self.repair_date}'
 
-        }
-
-    def print_info(self):  # метод "красивого" вывода информации о заказе, после его создания
-        print()
-        print(f'Информация о заказе № {Order.numb_receipt}:')
-        print('_' * 54)
-        for i, j in dict_orders[Order.numb_receipt].items():
-            print(f'| {i}: {j}' + f'{" " * (50 - len(f"{i}: {j}"))} |')
-        print('-' * 54)
+    def order_info(self):
+        print(
+            f'{"-" * 33}',
+            f'Номер заказа: {self.numb_receipt}',
+            f'Дата заказа: {self.order_date.strftime("%H:%M:%S, %d %B %Y г.")}',
+            f'ФИО заказчика: {self.fio}',
+            f'Информация об устройстве: {self.device}',
+            f'Статус заказа: {self.status}',
+            f'Дата готовности: {self.repair_date.strftime("%d %B %Y г.")}',
+            sep='\n'
+        )

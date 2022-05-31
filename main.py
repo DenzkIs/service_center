@@ -1,38 +1,37 @@
 import receipt
 import devices
+import utils
 
 new_order = 'y'
 while new_order == 'y':
     fio = input('ФИО: ')
     print('1 - Телефон', '2 - Ноутбук', '3 - Телевизор', sep='\n')
     type = input('Введите номер типа изделия: ')
-
+    model = input('Модель: ')
+    problem = input('Неисправность: ')
     # Проверяю на тип изделия
     if type == '1':
-        model = input('Модель: ')
         os = input('Операционная система: ')
-        problem = input('Неисправность: ')
-        d = devices.Phone(model, os, problem)  # создаю объект класса Phone, передаю полученные данные
-        o = receipt.Order(fio, d.info())  # передаю в Order инфу об устройстве в виде словаря d.info()
-        o.print_info()  # вывожу в консоль информацию с квитанции
+        device = devices.Phone(model, os, problem)
+        order = receipt.Order(fio, device)
+        utils.order_list.append(order)
+        order.order_info()
     elif type == '2':
-        model = input('Модель: ')
         year = input('Год выпуска: ')
         os = input('Операционная система: ')
-        problem = input('Неисправность: ')
-        d = devices.Notebook(model, year, os, problem)  # создаю объект класса Notebook, передаю полученные данные
-        o = receipt.Order(fio, d.info())  # передаю в Order инфу об устройстве в виде словаря d.info()
-        o.print_info()
+        device = devices.Notebook(model, year, os, problem)
+        order = receipt.Order(fio, device)
+        utils.order_list.append(order)
+        order.order_info()
     elif type == '3':
-        model = input('Модель: ')
         diagonal = input('Диагональ: ')
-        problem = input('Неисправность: ')
-        d = devices.TV(model, diagonal, problem)  # создаю объект класса TV, передаю полученные данные
-        o = receipt.Order(fio, d.info())  # передаю в Order инфу об устройстве в виде словаря d.info()
-        o.print_info()
+        device = devices.TV(model, diagonal, problem)
+        order = receipt.Order(fio, device)
+        utils.order_list.append(order)
+        order.order_info()
     else:
         print(' - - - Введен неверный тип устройства - - - ')
     print('_' * 33)
-    print('Чтобы создать новый заказ введите "y"')
+    print('Создать новый заказ - введите "y"')
     print('Для выхода нажмите "Enter"')
-    new_order = input('Продолжаем?: ').lower()
+    new_order = input('Продолжаем?: ')

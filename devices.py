@@ -5,44 +5,28 @@ class Device:
 
 
 class Notebook(Device):
-    def __init__(self, model, year, os, problem):
+    def __init__(self, model: str, year: str, os: str, problem: str):
         super().__init__(model, problem)
         self.year = year
         self.os = os
 
-    def info(self):  # возвращает словарь с информацией об устройстве
-        return {
-            'Тип устройства': self.__class__.__name__,
-            'Модель': self.model,
-            'Год выпуска': self.year,
-            'Операционная система': self.os,
-            'Неисправность': self.problem
-        }
+    def __str__(self):
+        return f'{self.__class__.__name__, self.model, self.problem, self.year, self.os}'
 
 
 class Phone(Device):
-    def __init__(self, model, os, problem):
+    def __init__(self, model: str, os: str, problem: str):
         super().__init__(model, problem)
         self.os = os
 
-    def info(self):
-        return {
-            'Тип устройства': self.__class__.__name__,
-            'Модель': self.model,
-            'Операционная система': self.os,
-            'Неисправность': self.problem
-        }
+    def __str__(self):
+        return f'{self.__class__.__name__, self.model, self.problem, self.os}'
 
 
 class TV(Device):
-    def __init__(self, model, diagonal, problem):
+    def __init__(self, model: str, diagonal: str, problem: str):
         super().__init__(model, problem)
         self.diagonal = diagonal
 
-    def info(self):
-        return {
-            'Тип устройства': self.__class__.__name__,
-            'Модель': self.model,
-            'Диагональ экрана': self.diagonal,
-            'Неисправность': self.problem
-        }
+    def __str__(self):
+        return f'{self.__class__.__name__, self.model, self.problem, self.diagonal}'
