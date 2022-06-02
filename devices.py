@@ -11,7 +11,12 @@ class Notebook(Device):
         self.os = os
 
     def __str__(self):
-        return f'{self.__class__.__name__, self.model, self.problem, self.year, self.os}'
+        return f'Тип устройства: {self.__class__.__name__}\nМодель: {self.model}\
+        \nГод выпуска: {self.year}\nОперационная система: {self.os}\nНеисправность: {self.problem}'
+
+    def __repr__(self):
+        return f'Тип устройства: {self.__class__.__name__}\nМодель: {self.model}\
+        \nГод выпуска: {self.year}\nОперационная система: {self.os}\nНеисправность: {self.problem}'
 
 
 class Phone(Device):
@@ -20,7 +25,12 @@ class Phone(Device):
         self.os = os
 
     def __str__(self):
-        return f'{self.__class__.__name__, self.model, self.problem, self.os}'
+        return f'Тип устройства: {self.__class__.__name__}\nМодель: {self.model}\
+        \nОперационная система: {self.os}\nНеисправность: {self.problem}'
+
+    def __repr__(self):
+        return f'Тип устройства: {self.__class__.__name__}\nМодель: {self.model}\
+        \nОперационная система: {self.os}\nНеисправность: {self.problem}'
 
 
 class TV(Device):
@@ -29,4 +39,9 @@ class TV(Device):
         self.diagonal = diagonal
 
     def __str__(self):
-        return f'{self.__class__.__name__, self.model, self.problem, self.diagonal}'
+        return f'Тип устройства: {self.__class__.__name__}\nМодель: {self.model}\
+        \nДиагональ: {self.diagonal}\nНеисправность: {self.problem}'
+
+    def __repr__(self):
+        return f'Тип устройства: {self.__class__.__name__}\nМодель: {self.model}\
+        \nДиагональ: {self.diagonal}\nНеисправность: {self.problem}'
