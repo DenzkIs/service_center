@@ -3,11 +3,11 @@ import devices
 import utils
 
 utils.for_check_level_2()
-print('1 - Заполнить новую квитанцию.', '2 - Просмотреть информацию о квитанциях', sep='\n')
-do = input('Что делаем?: ')
-if do == '1':
-    new_order = 'y'
-    while new_order == 'y':
+repeat_again = 'y'
+while repeat_again == 'y':
+    print('1 - Заполнить новую квитанцию.', '2 - Просмотреть информацию о квитанциях', sep='\n')
+    do = input('Что делаем?: ')
+    if do == '1':
         fio = input('ФИО: ')
         print('1 - Телефон', '2 - Ноутбук', '3 - Телевизор', sep='\n')
         type = input('Введите номер типа изделия: ')
@@ -36,19 +36,19 @@ if do == '1':
         else:
             print('!!! Был выбран неверный тип устройства !!!')
         print('_' * 33)
-        print('Создать новый заказ - введите "y"')
-        print('Для выхода нажмите "Enter"')
-        new_order = input('Заполнить еще квитанцию?: ')
-elif do == '2':
-    inf = input('Введите номер квитанции или ФИО заказчика: ')
-    if inf.isdigit():
-        for order in utils.order_list:
-            if order.numb_receipt == int(inf):
-                order.order_info()
+
+    elif do == '2':
+        inf = input('Введите номер квитанции или ФИО заказчика: ')
+        if inf.isdigit():
+            for order in utils.order_list:
+                if order.numb_receipt == int(inf):
+                    order.order_info()
+        else:
+            for order in utils.order_list:
+                if order.fio == inf:
+                    order.order_info()
+        print('----- Поиск окончен -----')
     else:
-        for order in utils.order_list:
-            if order.fio == inf:
-                order.order_info()
-    print('----- Поиск окончен -----')
-else:
-    print('Пока можно выбрать только 1 или 2.')
+        print('Пока можно выбрать только 1 или 2.')
+
+    repeat_again = input('Вернуться в главное меню - "y", выход - Enter: ')
