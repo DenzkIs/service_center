@@ -21,7 +21,7 @@ class Order:
         return f'{self.numb_receipt, self.order_date, self.fio, self.device, self.status, self.repair_date}'
 
     def __repr__(self):
-        return f'{self.numb_receipt, self.order_date.strftime("%H:%M:%S, %d.%m.%Y г."), self.fio, self.device, self.status, self.repair_date.strftime("%d %B %Y г.")}'
+        return f'{self.numb_receipt, self.order_date.strftime("%H:%M:%S, %d.%m.%Y г."), self.fio, self.device, self.status, self.repair_date}'
 
     def order_info(self):
         print(
