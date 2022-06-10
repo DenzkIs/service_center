@@ -3,13 +3,30 @@ import devices
 import utils
 from datetime import datetime
 import bcrypt
+import csv
 
-utils.for_check_level_2()  # для удобство проверки выводит инфу о вшитых квитанциях
+with open('receipts.csv', 'r', newline='', encoding='utf-8') as f:
+    reader = csv.reader(f, delimiter='*')
+    for row in reader:
+        if row[5] == 'Телефон':
+            utils.order_list.append(
+                receipt.Order(int(row[0]), row[2], devices.Phone(row[6], row[7], row[8], type=row[5]),
+                              order_date=row[1], status=row[3], repair_date=row[4]))
+        elif row[5] == 'Телевизор':
+            utils.order_list.append(
+                receipt.Order(int(row[0]), row[2], devices.TV(row[6], row[7], row[8], type=row[5]), order_date=row[1],
+                              status=row[3], repair_date=row[4]))
+        elif row[5] == 'Ноутбук':
+            utils.order_list.append(
+                receipt.Order(int(row[0]), row[2], devices.Notebook(row[6], row[7], row[8], row[9], type=row[5]),
+                              order_date=row[1], status=row[3], repair_date=row[4]))
+
 repeat_again = 'y'
 while repeat_again == 'y':
     print('1 - Новая квитанцию', '2 - Информация о квитанциях', '3 - Вход администратора', sep='\n')
     do = input('Что делаем?: ')
     if do == '1':
+        next_order_number = utils.order_list[-1].numb_receipt + 1
         fio = input('ФИО: ')
         print('1 - Телефон', '2 - Ноутбук', '3 - Телевизор', sep='\n')
         type = input('Введите номер типа изделия: ')
@@ -18,20 +35,20 @@ while repeat_again == 'y':
         if type == '1':
             os = input('Операционная система: ')
             device = devices.Phone(model, os, problem)
-            order = receipt.Order(fio, device)
+            order = receipt.Order(next_order_number, fio, device)
             utils.order_list.append(order)
             order.order_info()
         elif type == '2':
             year = input('Год выпуска: ')
             os = input('Операционная система: ')
             device = devices.Notebook(model, year, os, problem)
-            order = receipt.Order(fio, device)
+            order = receipt.Order(next_order_number, fio, device)
             utils.order_list.append(order)
             order.order_info()
         elif type == '3':
             diagonal = input('Диагональ: ')
             device = devices.TV(model, diagonal, problem)
-            order = receipt.Order(fio, device)
+            order = receipt.Order(next_order_number, fio, device)
             utils.order_list.append(order)
             order.order_info()
         else:
@@ -67,7 +84,7 @@ while repeat_again == 'y':
                     '3 - Добавить нового админа',
                     '4 - Квитанции',
                     '5 - Выход из админ. панели',
-                      sep='\n'
+                    sep='\n'
                 )
                 print('-' * 30)
                 mode = input('Что делаем?: ')
@@ -118,7 +135,7 @@ while repeat_again == 'y':
                         hash_pw = bcrypt.hashpw(new_pw.encode(), bcrypt.gensalt())
                         utils.login_pw.append([new_login, hash_pw, new_admin])
                         print(f'Новый администратор {new_admin} успешно зарегистрирован!')
-                        #print(utils.login_pw)
+                        # print(utils.login_pw)
                 elif mode == '4':
                     print('<><><> Меню работы с квитанциями <><><>')
                     order_change_mode = 'y'
@@ -159,8 +176,9 @@ while repeat_again == 'y':
                                     print('-' * 30)
                                     mode42 = input('Что делаем?: ')
                                     if mode42 == '1':
-                                        utils.order_list[order_num].repair_date = datetime.now()
-                                        print(f'Дата выполнения заказа №{utils.order_list[order_num].numb_receipt} изменена на {utils.order_list[order_num].repair_date.strftime("%d.%m.%Y г.")}')
+                                        utils.order_list[order_num].repair_date = datetime.now().strftime("%d.%m.%Y г.")
+                                        print(
+                                            f'Дата выполнения заказа №{utils.order_list[order_num].numb_receipt} изменена на {utils.order_list[order_num].repair_date}')
 
                                     elif mode42 == '2':
                                         # из-за наличия метода strftime при выводе квитанций приходиться писать код ниже
@@ -169,8 +187,12 @@ while repeat_again == 'y':
                                         year = input('Введите год: ')
                                         if day.isdigit() and month.isdigit() and year.isdigit():
                                             try:
-                                                utils.order_list[order_num].repair_date = datetime(int(year), int(month), int(day))
-                                                print(f'Дата выполнения заказа №{utils.order_list[order_num].numb_receipt} изменена на {utils.order_list[order_num].repair_date.strftime("%d.%m.%Y г.")}')
+                                                utils.order_list[order_num].repair_date = datetime(int(year),
+                                                                                                   int(month),
+                                                                                                   int(day)).strftime(
+                                                    "%d.%m.%Y г.")
+                                                print(
+                                                    f'Дата выполнения заказа №{utils.order_list[order_num].numb_receipt} изменена на {utils.order_list[order_num].repair_date}')
                                             except ValueError:
                                                 print('Вы ввели несуществующую дату! Попробуйте снова.')
                                         else:
@@ -194,5 +216,9 @@ while repeat_again == 'y':
             print('Неверный логин или пароль')
     else:
         print('Пока можно выбрать только 1, 2 или 3.')
+    repeat_again = input('Вернуться в главное меню - "y", выход - "n": ')
 
-    repeat_again = input('Вернуться в главное меню - "y", выход - "n"')
+with open('receipts.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f, delimiter='*')
+    for i in utils.order_list:
+        writer.writerow(i.save())

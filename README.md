@@ -1,5 +1,7 @@
 # OOP training project "Repair shop" (service center)
 
-Added Level 1
-Added Level 2
-Added Level 3 (добавлено хэширование паролей)
+#### :white_check_mark: Level 1
+#### :white_check_mark: Level 2
+#### :white_check_mark: Level 3
+#### :white_check_mark: Level 4
+#### :white_check_mark: Хэширование паролей
