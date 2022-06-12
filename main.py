@@ -26,7 +26,7 @@ while repeat_again == 'y':
     print('1 - Новая квитанцию', '2 - Информация о квитанциях', '3 - Вход администратора', sep='\n')
     do = input('Что делаем?: ')
     if do == '1':
-        next_order_number = utils.order_list[-1].numb_receipt + 1
+        next_order_number = utils.order_list[-1].numb_receipt + 1  # контроль нумерации квитанций
         fio = input('ФИО: ')
         print('1 - Телефон', '2 - Ноутбук', '3 - Телевизор', sep='\n')
         type = input('Введите номер типа изделия: ')
@@ -67,6 +67,13 @@ while repeat_again == 'y':
                     order.order_info()
         print('----- Поиск окончен -----')
     elif do == '3':
+        utils.help_pw_info()  # функция-подсказка логинов и паролей
+        # читаю инфу об админах, только при входе в Админ. режим
+        with open('admins.csv', 'r', newline='', encoding='utf-8') as f:
+            reader = csv.reader(f, delimiter='*')
+            for a, b, c in reader:
+                utils.login_pw.append([a, bytes(b, encoding='utf-8'), c])
+        #print(utils.login_pw)
         authorization = ''
         login = input('Логин: ')
         pw = input('Пароль: ')
@@ -101,10 +108,9 @@ while repeat_again == 'y':
                             if num == int(delete) - 1:
                                 delete_number = num
                                 delete_name = name[2]
-
                         if delete_number is not None:
                             # тут я попался при попытке удалить Админа с 0 индексом используя "if delete_number:"
-                            # но это может пригодиться, чтобы нельзя было удалить первого админа
+                            # но это может пригодиться, чтобы нельзя было удалить первого (нулевого) админа
                             utils.login_pw.pop(delete_number)
                             print(f'Админ {delete_name} успешно удален!')
                     else:
@@ -115,7 +121,7 @@ while repeat_again == 'y':
                             utils.login_pw.pop(delete_number)
                             print(f'Админ {delete} успешно удален!')
                         else:
-                            print('Вы введли неверное ФИО админа')
+                            print('Вы ввели неверное ФИО админа')
                 elif mode == '3':
                     new_admin = input('Введите имя нового админа: ')
                     new_login = input('Введите логин: ')
@@ -137,7 +143,7 @@ while repeat_again == 'y':
                         print(f'Новый администратор {new_admin} успешно зарегистрирован!')
                         # print(utils.login_pw)
                 elif mode == '4':
-                    print('<><><> Меню работы с квитанциями <><><>')
+                    print('__________ Меню работы с квитанциями __________')
                     order_change_mode = 'y'
                     while order_change_mode == 'y':
                         order_inpt = input('Введите номер квитанции (1 - вернуться назад): ')
@@ -210,6 +216,13 @@ while repeat_again == 'y':
                 elif mode == '5':
                     print('Вы вышли из администраторской панели.')
                     admin_mode = ''
+
+                    with open('admins.csv', 'w', newline='', encoding='utf-8') as f:
+                        writer = csv.writer(f, delimiter='*')
+                        for a, b, c in utils.login_pw:
+                            # decode использую, так как не могу хранить в csv байтовую строку без кавычек
+                            writer.writerow([a, b.decode('utf-8'), c])
+                    utils.login_pw = []  # очищаю список, так как при повторном входе в админку он заполнится дубликатами
                 else:
                     print('Неверный ввод. Выберите пункт от 1 до 7.')
         else:
